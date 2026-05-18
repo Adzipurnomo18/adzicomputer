@@ -1,199 +1,247 @@
-<section class="section-home">
-  <div class="container hero">
-    <div class="reveal">
-      <span class="badge"><i class="fa-regular fa-star"></i> Rating 5.0 — Cepat, Rapih, Bergaransi</span>
-      <h1>Solusi cepat & rapi untuk laptop, PC, dan elektronik Anda</h1>
-      <p>Kami spesialis perbaikan dengan diagnosa transparan, sparepart jelas, dan pengerjaan rapi.</p>
-      <div class="actions">
-        <a class="cta" href="index.php?page=katalog"><i class="fa-solid fa-robot"></i> Lihat Katalog</a>
-        <a class="btn" href="tel:<?= h($CONFIG['phone']) ?>"><i class="fa-solid fa-phone"></i> Telepon</a>
-        <a class="btn" href="<?= h($CONFIG['maps']) ?>" target="_blank"><i class="fa-solid fa-location-dot"></i> Lokasi</a>
+<?php
+$waText = rawurlencode('Halo ADZI Computer, saya ingin konsultasi servis.');
+$waNumber = preg_replace('/\D+/', '', $CONFIG['wa']);
+if (str_starts_with($waNumber, '0')) {
+  $waNumber = '62' . substr($waNumber, 1);
+}
+$waLink = 'https://wa.me/' . $waNumber . '?text=' . $waText;
+$galleryItems = $pdo->query("SELECT * FROM gallery WHERE type = 'image' ORDER BY created_at DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
+$allGalleryItems = $pdo->query("SELECT * FROM gallery WHERE type = 'image' ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
+$testimonialFiles = glob(__DIR__ . '/../assets/img/gambar/testimoni*.{png,jpg,jpeg,webp}', GLOB_BRACE) ?: [];
+natsort($testimonialFiles);
+$testimonialImages = array_values(array_map(function($file, $index){
+  return [
+    'src' => 'assets/img/gambar/' . basename($file),
+    'alt' => 'Testimoni pelanggan ADZI Computer ' . ($index + 1),
+  ];
+}, array_values($testimonialFiles), array_keys(array_values($testimonialFiles))));
+?>
+
+<section class="home-hero">
+  <div class="container hero-grid">
+    <div class="hero-copy reveal">
+      <span class="rating-badge"><i class="fa-solid fa-star"></i> Rating 5.0 <b></b> Cepat, Rapi, Bergaransi</span>
+      <h1>SOLUSI CEPAT &amp; TERPERCAYA UNTUK <span>LAPTOP,</span> PC, DAN <span>ELEKTRONIK</span></h1>
+      <p>Kami siap membantu semua kebutuhan perbaikan perangkat Anda dengan hasil terbaik dan bergaransi.</p>
+
+      <div class="hero-actions">
+        <a class="cta cta-primary" href="<?= h($waLink) ?>" target="_blank"><i class="fa-brands fa-whatsapp"></i> Chat WhatsApp</a>
+        <a class="btn" href="#layanan"><i class="fa-solid fa-list"></i> Lihat Layanan</a>
+        <a class="btn" href="<?= h($CONFIG['maps']) ?>" target="_blank"><i class="fa-solid fa-location-dot"></i> Lokasi Kami</a>
+      </div>
+
+      <div class="feature-list">
+        <article class="feature-card">
+          <i class="fa-regular fa-circle-check"></i>
+          <strong>Bergaransi</strong>
+          <span>Garansi servis hingga 30 hari</span>
+        </article>
+        <article class="feature-card">
+          <i class="fa-regular fa-clock"></i>
+          <strong>Cepat &amp; Tepat</strong>
+          <span>Pengerjaan cepat dan profesional</span>
+        </article>
+        <article class="feature-card">
+          <i class="fa-solid fa-gear"></i>
+          <strong>Sparepart Original</strong>
+          <span>Kualitas terbaik dan bergaransi</span>
+        </article>
+        <article class="feature-card">
+          <i class="fa-regular fa-clipboard"></i>
+          <strong>Harga Transparan</strong>
+          <span>Tanpa biaya tersembunyi</span>
+        </article>
       </div>
     </div>
 
-    <div class="panel reveal">
-      <div class="grid gallery-grid">
-        <?php
-        // Ambil 6 item terbaru dari galeri admin
-        $items = $pdo->query("SELECT * FROM gallery ORDER BY created_at DESC LIMIT 6")->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($items as $it):
-          $caption = $it['caption'] ?? '';
-          if ($it['type'] === 'image'):
-            $full = 'uploads/gallery/' . $it['path'];
-        ?>
-          <div class="gallery-card">
-            <!-- Penting: bungkus gambar dengan <a class="lb"> supaya lightbox mencegat klik -->
-            <a class="lb" href="<?= h($full) ?>" title="<?= h($caption) ?>">
-              <img src="<?= h($full) ?>" alt="<?= h($caption) ?>">
-            </a>
-          </div>
-        <?php else: ?>
-          <div class="gallery-card">
-            <div class="ratio-1x1" style="border-radius:12px; overflow:hidden;">
-              <iframe
-                src="https://www.youtube.com/embed/<?= h($it['path']) ?>"
-                title="<?= h($caption ?: 'Video') ?>"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-                style="width:100%; height:100%; display:block;"
-              ></iframe>
-            </div>
-          </div>
-        <?php endif; endforeach; ?>
-      </div>
-
-      <p class="note">*Tampilan ambil dari galeri admin (otomatis).</p>
+    <div class="hero-visual reveal">
+      <div class="circuit-lines" aria-hidden="true"></div>
+      <img src="assets/img/gambar/02_hero_laptop_pc_cutout.png" alt="Laptop dan PC gaming merah">
     </div>
   </div>
 </section>
 
-<!-- =============== INLINE LIGHTBOX (CSS + JS) =============== -->
-<style>
-  .lb-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);opacity:0;transition:opacity .25s ease}
-  .lb-overlay.show{display:flex;opacity:1}
-  .lb-overlay.hide{opacity:0}
-  .lb-box{position:relative;border-radius:14px;overflow:hidden;background:#0b0f14;border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 120px rgba(0,0,0,.5);transform:translateY(8px) scale(.96);opacity:0;transition:transform .24s cubic-bezier(.2,.8,.2,1),opacity .24s ease}
-  .lb-overlay.show .lb-box{transform:translateY(0) scale(1);opacity:1}
-  .lb-media{width:min(90vw,820px);max-height:78vh;display:grid;place-items:center;padding:14px}
-  .lb-media img,.lb-media iframe{max-width:100%;max-height:70vh;border-radius:12px;display:block}
-  .lb-cap{padding:10px 14px;color:#cfe7ff;font:500 14px/1.4 Inter,system-ui,sans-serif;border-top:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03))}
-  .lb-close,.lb-prev,.lb-next{position:absolute;width:42px;height:36px;display:grid;place-items:center;cursor:pointer;color:#eaf1ff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:10px;transition:background .15s ease}
-  .lb-close:hover,.lb-prev:hover,.lb-next:hover{background:rgba(255,255,255,.14)}
-  .lb-close{top:10px;right:10px}
-  .lb-prev{top:50%;left:12px;transform:translateY(-50%)}
-  .lb-next{top:50%;right:12px;transform:translateY(-50%)}
-  .gallery-grid img,.gallery-card img{cursor:zoom-in;pointer-events:auto}
-  @media (max-width:768px){.lb-media{width:94vw;max-height:72vh;padding:10px}.lb-media img,.lb-media iframe{max-height:64vh}.lb-cap{font-size:13px}}
-</style>
-<script>
-(function(){
-  const overlay = document.createElement('div');
-  overlay.className = 'lb-overlay';
-  overlay.innerHTML = `
-    <div class="lb-box">
-      <div class="lb-media"></div>
-      <div class="lb-cap"></div>
-      <button type="button" class="lb-close" aria-label="Tutup">✕</button>
-      <button type="button" class="lb-prev"  aria-label="Sebelumnya">‹</button>
-      <button type="button" class="lb-next"  aria-label="Berikutnya">›</button>
-    </div>`;
+<section class="stats-wrap">
+  <div class="container stats-bar reveal">
+    <article><i class="fa-solid fa-users"></i><div><strong data-count-to="300" data-count-suffix="+">0+</strong><span>Pelanggan Puas</span></div></article>
+    <article><i class="fa-solid fa-screwdriver-wrench"></i><div><strong data-count-to="350" data-count-suffix="+">0+</strong><span>Perangkat Diperbaiki</span></div></article>
+    <article><i class="fa-solid fa-star"></i><div><strong data-count-to="5" data-count-decimals="1">0.0</strong><span>Rating Pelanggan</span></div></article>
+    <article><i class="fa-regular fa-clock"></i><div><strong data-count-to="30" data-count-suffix=" Hari">0 Hari</strong><span>Garansi Servis</span></div></article>
+  </div>
+</section>
 
-  let list = [], idx = 0;
+<section class="services-section" id="layanan">
+  <div class="container">
+    <div class="section-heading reveal">
+      <span>LAYANAN KAMI</span>
+      <h2>Service <em>Profesional &amp; Bergaransi</em></h2>
+    </div>
 
-  function disableScroll(){ document.documentElement.style.overflow='hidden'; }
-  function enableScroll(){ document.documentElement.style.overflow=''; }
+    <div class="service-grid">
+      <article class="service-card reveal">
+        <div class="service-icon"><img src="assets/img/icon/icon_laptop.png" alt=""></div>
+        <h3>Service Laptop</h3>
+        <p>Perbaikan berbagai kerusakan laptop dengan teknisi ahli.</p>
+        <ul>
+          <li>Ganti layar</li>
+          <li>Perbaikan motherboard</li>
+          <li>Cleaning &amp; thermal</li>
+          <li>Install ulang OS</li>
+        </ul>
+        <div class="service-price">Mulai <strong>Rp 150.000</strong></div>
+        <a href="index.php?page=katalog">Lihat Detail <i class="fa-solid fa-arrow-right"></i></a>
+      </article>
 
-  function collect(){ list = Array.from(document.querySelectorAll('a.lb')); }
+      <article class="service-card reveal">
+        <div class="service-icon"><img src="assets/img/icon/icon_pc.png" alt=""></div>
+        <h3>Service PC</h3>
+        <p>Rakit, upgrade, dan perbaikan PC semua kebutuhan.</p>
+        <ul>
+          <li>Rakit PC</li>
+          <li>Upgrade performa</li>
+          <li>Perbaikan hardware</li>
+          <li>Install software</li>
+        </ul>
+        <div class="service-price">Mulai <strong>Rp 120.000</strong></div>
+        <a href="index.php?page=katalog">Lihat Detail <i class="fa-solid fa-arrow-right"></i></a>
+      </article>
 
-  function open(i){
-    idx = (i + list.length) % list.length;
-    const a   = list[idx];
-    const src = a.getAttribute('href');
-    const txt = a.getAttribute('title') || (a.querySelector('img')?.alt || '');
+      <article class="service-card reveal">
+        <div class="service-icon"><img src="assets/img/icon/icon_ssd.png" alt=""></div>
+        <h3>LCD / Screen</h3>
+        <p>Ganti layar laptop dan perbaikan berbagai merk.</p>
+        <ul>
+          <li>Ganti LCD/LED</li>
+          <li>Perbaikan backlight</li>
+          <li>Flicker / bergaris</li>
+          <li>Pengecekan layar</li>
+        </ul>
+        <div class="service-price">Mulai <strong>Rp 150.000</strong></div>
+        <a href="index.php?page=katalog">Lihat Detail <i class="fa-solid fa-arrow-right"></i></a>
+      </article>
 
-    const media = overlay.querySelector('.lb-media');
-    const cap   = overlay.querySelector('.lb-cap');
-    
-    // Pastikan overlay sudah di-reset dan tidak ada class show
-    overlay.classList.remove('show');
-    
-    // Reset isi
-    media.innerHTML = '';
-    cap.textContent = txt;
+      <article class="service-card reveal">
+        <div class="service-icon"><img src="assets/img/icon/icon_cpu_chip.png" alt=""></div>
+        <h3>Elektronik Lain</h3>
+        <p>Perbaikan berbagai perangkat elektronik rumah &amp; kantor.</p>
+        <ul>
+          <li>TV LED / LCD</li>
+          <li>Printer</li>
+          <li>Monitor</li>
+          <li>PSU &amp; UPS</li>
+        </ul>
+        <div class="service-price">Mulai <strong>Rp 100.000</strong></div>
+        <a href="index.php?page=katalog">Lihat Detail <i class="fa-solid fa-arrow-right"></i></a>
+      </article>
+    </div>
+  </div>
+</section>
 
-    const img = new Image();
-    img.onload = ()=>{ 
-      overlay.classList.add('show'); 
-      disableScroll(); 
-    };
-    img.src = src; 
-    img.alt = txt;
-    media.appendChild(img);
-  }
+<section class="why-section" id="tentang">
+  <div class="container why-grid">
+    <div class="why-copy reveal">
+      <span>KENAPA MEMILIH KAMI</span>
+      <h2>Komitmen Kami untuk Hasil Terbaik</h2>
+      <p>Kami memberikan pelayanan terbaik dengan mengutamakan kualitas, kecepatan, dan kepuasan pelanggan.</p>
+    </div>
 
-  function close(){
-    overlay.classList.remove('show');
-    enableScroll();
-    // tunggu transisi selesai baru bersihkan isi
-    setTimeout(()=>{
-      overlay.querySelector('.lb-media').innerHTML='';
-      overlay.querySelector('.lb-cap').textContent='';
-    }, 300);
-  }
+    <div class="why-cards">
+      <article class="why-card reveal"><img src="assets/img/icon/icon_tools.png" alt=""><div><h3>Teknisi Berpengalaman</h3><p>Didukung teknisi profesional dan berpengalaman di bidangnya.</p></div></article>
+      <article class="why-card reveal"><img src="assets/img/icon/icon_cpu_chip.png" alt=""><div><h3>Sparepart Berkualitas</h3><p>Menggunakan sparepart original dan berkualitas tinggi.</p></div></article>
+      <article class="why-card reveal"><img src="assets/img/icon/icon_speed.png" alt=""><div><h3>Pengerjaan Cepat</h3><p>Proses perbaikan cepat tanpa mengurangi kualitas hasil.</p></div></article>
+      <article class="why-card reveal"><img src="assets/img/icon/icon_warranty.png" alt=""><div><h3>Garansi Servis</h3><p>Semua layanan bergaransi hingga 30 hari untuk ketenangan Anda.</p></div></article>
+    </div>
+  </div>
+</section>
 
-  function next(n){ if(overlay.classList.contains('show')) open(idx + n); }
+<section class="proof-section">
+  <div class="container proof-grid">
+    <article class="proof-panel reveal">
+      <div class="panel-head">
+        <div><span>GALERI HASIL PERBAIKAN</span><h2>Before &amp; After</h2></div>
+        <button class="panel-link" type="button" data-open-gallery="repair-gallery">Lihat Semua <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+      <div class="before-gallery gallery-grid">
+        <?php if ($galleryItems): foreach ($galleryItems as $it): $full = 'uploads/gallery/' . $it['path']; ?>
+          <div class="gallery-card">
+            <img src="<?= h($full) ?>" alt="<?= h($it['caption'] ?: 'Hasil perbaikan') ?>" data-full="<?= h($full) ?>">
+          </div>
+        <?php endforeach; else: ?>
+          <img src="assets/img/gambar/07_before_after_gallery.png" alt="Before after servis laptop">
+        <?php endif; ?>
+      </div>
+      <div class="slider-dots"><b></b><i></i><i></i></div>
+    </article>
 
-  // Append overlay ke body langsung
-  if(document.body) {
-    document.body.appendChild(overlay);
-  } else {
-    document.addEventListener('DOMContentLoaded', ()=> document.body.appendChild(overlay));
-  }
+    <article class="proof-panel testimonial reveal">
+      <div class="panel-head">
+        <div><span>TESTIMONI PELANGGAN</span><h2>Apa Kata Mereka?</h2></div>
+        <button class="panel-link" type="button" data-open-gallery="testimonial-gallery">Lihat Semua <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+      <div class="testimonial-slider" data-testimonial-slider>
+        <button class="testimonial-nav prev" type="button" aria-label="Testimoni sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="testimonial-track">
+          <?php foreach ($testimonialImages as $index => $image): ?>
+            <img class="<?= $index === 0 ? 'active' : '' ?>" src="<?= h($image['src']) ?>" alt="<?= h($image['alt']) ?>">
+          <?php endforeach; ?>
+        </div>
+        <button class="testimonial-nav next" type="button" aria-label="Testimoni berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="slider-dots testimonial-dots">
+        <?php foreach ($testimonialImages as $index => $image): ?>
+          <button class="<?= $index === 0 ? 'active' : '' ?>" type="button" aria-label="Tampilkan testimoni <?= h((string)($index + 1)) ?>"></button>
+        <?php endforeach; ?>
+      </div>
+    </article>
+  </div>
+</section>
 
-  // Satu delegasi event utama untuk semua klik
-  document.addEventListener('click', (e)=>{
-    // Jangan proses jika tidak dalam lightbox context
-    const isInLightbox = e.target.closest('.lb-box') || e.target === overlay;
-    const isGalleryLink = e.target.closest('a.lb');
-    
-    if(!isInLightbox && !isGalleryLink) return;
-    
-    // Klik gambar untuk buka lightbox
-    if(isGalleryLink && !overlay.classList.contains('show')){
-      e.preventDefault();
-      if(!list.length) collect();
-      const i = list.indexOf(isGalleryLink);
-      open(i >= 0 ? i : 0);
-      return;
-    }
-    
-    if(!overlay.classList.contains('show')) return;
-    
-    // Klik tombol close
-    if(e.target.closest('.lb-close')){
-      e.stopPropagation();
-      e.preventDefault();
-      console.log('Close button clicked');
-      close();
-      return;
-    }
-    
-    // Klik tombol prev
-    if(e.target.closest('.lb-prev')){
-      e.stopPropagation();
-      e.preventDefault();
-      next(-1);
-      return;
-    }
-    
-    // Klik tombol next
-    if(e.target.closest('.lb-next')){
-      e.stopPropagation();
-      e.preventDefault();
-      next(1);
-      return;
-    }
-    
-    // Klik backdrop (area gelap, bukan .lb-box)
-    if(e.target === overlay){
-      e.stopPropagation();
-      e.preventDefault();
-      console.log('Backdrop clicked');
-      close();
-      return;
-    }
-  }, false); // bubble phase, bukan capture
+<div class="inline-gallery-modal" data-gallery-modal="repair-gallery" aria-hidden="true">
+  <div class="inline-gallery-box" role="dialog" aria-modal="true" aria-label="Semua galeri hasil perbaikan">
+    <div class="inline-gallery-head">
+      <div><span>GALERI HASIL PERBAIKAN</span><h2>Semua Before &amp; After</h2></div>
+      <button type="button" data-close-gallery aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="inline-gallery-grid gallery-grid">
+      <?php if ($allGalleryItems): foreach ($allGalleryItems as $it): $full = 'uploads/gallery/' . $it['path']; ?>
+        <div class="inline-gallery-item">
+          <img src="<?= h($full) ?>" alt="<?= h($it['caption'] ?: 'Hasil perbaikan') ?>" data-full="<?= h($full) ?>">
+        </div>
+      <?php endforeach; else: ?>
+        <div class="inline-gallery-item">
+          <img src="assets/img/gambar/07_before_after_gallery.png" alt="Before after servis laptop">
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+</div>
 
-  // keyboard
-  document.addEventListener('keydown', (e)=>{
-    if(!overlay.classList.contains('show')) return;
-    if(e.key === 'Escape'){ close(); e.preventDefault(); }
-    if(e.key === 'ArrowLeft'){ next(-1); e.preventDefault(); }
-    if(e.key === 'ArrowRight'){ next(1); e.preventDefault(); }
-  });
+<div class="inline-gallery-modal" data-gallery-modal="testimonial-gallery" aria-hidden="true">
+  <div class="inline-gallery-box" role="dialog" aria-modal="true" aria-label="Semua testimoni pelanggan">
+    <div class="inline-gallery-head">
+      <div><span>TESTIMONI PELANGGAN</span><h2>Semua Testimoni</h2></div>
+      <button type="button" data-close-gallery aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="inline-gallery-grid testimonial-all-grid gallery-grid">
+      <?php foreach ($testimonialImages as $image): ?>
+        <div class="inline-gallery-item">
+          <img src="<?= h($image['src']) ?>" alt="<?= h($image['alt']) ?>" data-full="<?= h($image['src']) ?>">
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</div>
 
-  // collect saat window load
-  window.addEventListener('load', collect);
-})();
-</script>
+<section class="cta-section">
+  <div class="container cta-panel reveal">
+    <div>
+      <h2>Butuh Bantuan Sekarang?<br>Chat kami di <span>WhatsApp!</span></h2>
+      <p>Tim kami siap membantu dan memberikan solusi terbaik untuk perangkat Anda.</p>
+    </div>
+    <div class="cta-center">
+      <a class="cta cta-large" href="<?= h($waLink) ?>" target="_blank"><i class="fa-brands fa-whatsapp"></i> Chat WhatsApp Sekarang</a>
+      <small>Respon cepat <b></b> Ramah <b></b> Profesional</small>
+    </div>
+    <img class="qr-code" src="assets/img/gambar/10_qr_code.png" alt="QR WhatsApp ADZI Computer">
+  </div>
+</section>
