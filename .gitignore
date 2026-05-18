@@ -1,0 +1,28 @@
+.vscode/
+.idea/
+
+# Local/runtime files
+*.log
+*.tmp
+*.bak
+*.swp
+Thumbs.db
+.DS_Store
+
+# Environment/secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies/build folders
+node_modules/
+vendor/
+dist/
+build/
+
+# Runtime data created on hosting
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+uploads/tmp/
+
