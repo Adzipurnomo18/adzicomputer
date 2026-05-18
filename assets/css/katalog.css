@@ -1,0 +1,75 @@
+/* =========================
+   NAV (desktop): links ke kanan,
+   tepat di samping tombol WA
+   ========================= */
+@media (min-width: 992px) {
+  .nav{
+    display:flex;
+    align-items:center;
+    gap: 24px;
+  }
+  .nav .brand  { order: 1; }
+  .nav .spacer { order: 2; flex: 1 1 auto; } /* dorong item lain ke kanan */
+  .nav .link   { order: 3; }                  /* Home / Katalog / Kontak */
+  .nav .cta    { order: 4; margin-left: 8px;} /* Chat WhatsApp tetap paling kanan */
+
+  .nav .link + .link{ margin-left: 18px; }
+  .nav .link{
+    padding: 10px 14px;
+    border-radius: 12px;
+    transition: background .15s ease, box-shadow .15s ease;
+  }
+  .nav .link:hover{
+    background: rgba(255,255,255,.06);
+    box-shadow: 0 6px 16px rgba(0,0,0,.18) inset;
+  }
+}
+
+/* di layar kecil biarkan perilaku default (menu mobile) */
+@media (max-width: 991.98px){
+  .nav{ gap: 12px; }
+}
+
+/* =========================
+   KATALOG: layout & kartu
+   ========================= */
+.section-katalog{min-height:100dvh;padding:120px 24px 80px}
+.center{text-align:center}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--stroke);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.price{font-weight:800;font-size:24px;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.chip{position:absolute;top:14px;right:14px;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--stroke);background:rgba(108,240,255,.08)}
+
+/* ===== Animasi khusus HALAMAN KATALOG ===== */
+@keyframes katDrop {
+  0% {opacity:0; transform: translateY(-8px) scale(.98); filter: blur(1px);}
+  100%{opacity:1; transform: translateY(0)    scale(1);   filter: blur(0);}
+}
+@keyframes katCard {
+  0% {opacity:0; transform: translateY(18px) scale(.975);}
+  100%{opacity:1; transform: translateY(0)    scale(1);}
+}
+
+/* header filter bar */
+body.page-enter[data-page="katalog"] .catalog-toolbar{
+  animation: katDrop .55s cubic-bezier(.2,.8,.2,1) both .05s;
+}
+
+/* kartu layanan (stagger) */
+body.page-enter[data-page="katalog"] .service-grid .service-card{
+  opacity:0; transform: translateY(18px);
+  animation: katCard .55s ease both;
+}
+body.page-enter[data-page="katalog"] .service-grid .service-card:nth-child(1){ animation-delay:.10s; }
+body.page-enter[data-page="katalog"] .service-grid .service-card:nth-child(2){ animation-delay:.16s; }
+body.page-enter[data-page="katalog"] .service-grid .service-card:nth-child(3){ animation-delay:.22s; }
+body.page-enter[data-page="katalog"] .service-grid .service-card:nth-child(4){ animation-delay:.28s; }
+body.page-enter[data-page="katalog"] .service-grid .service-card:nth-child(5){ animation-delay:.34s; }
+body.page-enter[data-page="katalog"] .service-grid .service-card:nth-child(6){ animation-delay:.40s; }
+
+/* panel harga detail jika dibuka */
+@keyframes katExpand {
+  0% {opacity:0; transform: translateY(10px); }
+  100%{opacity:1; transform: translateY(0); }
+}
+.service-card.open .price-panel{ animation: katExpand .28s ease both; }

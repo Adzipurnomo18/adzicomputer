@@ -1,0 +1,67 @@
+/* ====== PAGE TRANSITION + REVEAL BRANDING ====== */
+:root{
+  --brand-neon: #ff2a33;        /* merah ADZI */
+  --brand-neon-soft: rgba(255,42,51,.14);
+}
+
+body.page-enter .page-shell{ 
+  animation: pageIn .55s cubic-bezier(.2,.8,.2,1) both;
+}
+body.page-enter .page-glow{
+  opacity: 1;
+  animation: glowIn .65s ease-out both;
+}
+
+/* saat keluar halaman (ketika link diklik) tampil overlay */
+.page-transition{
+  pointer-events: none;
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  opacity: 0; transform: scale(1.02);
+  transition: opacity .28s ease, transform .28s ease;
+  z-index: 999;
+}
+body.page-exit .page-transition{
+  opacity: 1; transform: scale(1);
+  pointer-events: all;
+}
+.page-transition .orb{
+  width: 200px; height: 200px; border-radius: 999px;
+  background: radial-gradient(ellipse at center,
+    rgba(255,255,255,.08) 0%,
+    var(--brand-neon-soft) 45%,
+    transparent 70%);
+  filter: drop-shadow(0 0 30px var(--brand-neon));
+  position: relative;
+}
+.page-transition .orb::before{
+  content:"ADZI";
+  position:absolute; inset:0; display:grid; place-items:center;
+  font: 800 34px/1 Inter,system-ui,sans-serif;
+  color: #fff; letter-spacing:.06em;
+  text-shadow: 0 0 18px rgba(255,255,255,.6), 0 0 30px var(--brand-neon);
+}
+
+/* glow lembut di belakang hero/atas halaman */
+.page-glow{
+  position: fixed; left: 50%; top: -60px; width: 70vmin; height: 70vmin;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: radial-gradient(60% 60% at 50% 50%, var(--brand-neon-soft), transparent 70%);
+  filter: blur(60px);
+  opacity: .0; pointer-events: none; z-index: 0;
+}
+
+/* wrapper konten utama agar bisa dianimasi masuk */
+.page-shell{ position: relative; z-index: 1; }
+
+/* keyframes */
+@keyframes pageIn{
+  0%   { opacity:0; transform: translateY(18px) scale(.98); filter: blur(4px); }
+  100% { opacity:1; transform: translateY(0) scale(1);     filter: blur(0); }
+}
+@keyframes glowIn{ from{ opacity:0; } to{ opacity:1; } }
+
+/* variasi per-halaman (opsional) */
+body[data-page="katalog"] .page-shell{ animation-duration: .65s; }
+body[data-page="kontak"]  .page-shell{ animation-duration: .7s;  }

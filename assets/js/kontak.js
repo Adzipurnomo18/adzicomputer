@@ -1,0 +1,1 @@
+// Kontak form validation — placeholder
