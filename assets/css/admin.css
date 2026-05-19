@@ -121,7 +121,7 @@ body.admin-body{
 .admin-alert.error{color:#b00020;background:#fff0f0;border:1px solid #ffc9c9}
 .admin-stat-grid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:16px;
   margin-top:18px;
 }
@@ -269,7 +269,7 @@ body.admin-body{
   .admin-topbar{align-items:flex-start;flex-direction:column}
   .admin-nav{justify-content:flex-start}
   .admin-grid{grid-template-columns:1fr}
-  .admin-stat-grid{grid-template-columns:1fr}
+  .admin-stat-grid{grid-template-columns:repeat(2,1fr)}
   .admin-table-head{display:none}
   .admin-table-row{grid-template-columns:1fr}
   .admin-table-row span::before{
@@ -289,4 +289,5 @@ body.admin-body{
   .admin-brand h1{font-size:21px}
   .admin-nav .btn,.admin-actions .btn,.admin-actions .cta{width:100%}
   .gallery-item-actions{flex-direction:column}
+  .admin-stat-grid{grid-template-columns:1fr}
 }

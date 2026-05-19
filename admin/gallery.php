@@ -2,6 +2,8 @@
 require __DIR__.'/guard.php';
 $uploadDir = __DIR__.'/../uploads/gallery';
 if(!is_dir($uploadDir)) mkdir($uploadDir,0777,true);
+$testimonialDir = __DIR__.'/../uploads/testimonials';
+if(!is_dir($testimonialDir)) mkdir($testimonialDir,0777,true);
 
 if(isset($_POST['add_image'])){
   if(!empty($_FILES['img']['name'])){
@@ -20,13 +22,20 @@ if(isset($_POST['add_image'])){
   }
 }
 
-if(isset($_POST['add_video'])){
-  $id = trim($_POST['youtube_id'] ?? '');
-  if($id){
-    $st = $pdo->prepare('INSERT INTO gallery(type,path,caption) VALUES("video",?,?)');
-    $st->execute([$id, $_POST['caption'] ?? '']);
-    flash('ok','Video ditambahkan.');
-    header('Location: gallery.php'); exit;
+if(isset($_POST['add_testimonial'])){
+  if(!empty($_FILES['testimonial_img']['name'])){
+    $ext = strtolower(pathinfo($_FILES['testimonial_img']['name'], PATHINFO_EXTENSION));
+    $allowed = ['jpg','jpeg','png','webp'];
+    if(in_array($ext,$allowed)){
+      $fname = uniqid('testimonial_').'.'.$ext;
+      move_uploaded_file($_FILES['testimonial_img']['tmp_name'], $testimonialDir.'/'.$fname);
+      $st = $pdo->prepare('INSERT INTO testimonials(image,caption) VALUES(?,?)');
+      $st->execute([$fname, $_POST['caption'] ?? '']);
+      flash('ok','Testimoni pelanggan ditambahkan.');
+      header('Location: gallery.php'); exit;
+    } else {
+      flash('err','Format testimoni tidak didukung.');
+    }
   }
 }
 
@@ -36,6 +45,15 @@ if(isset($_POST['edit_caption']) && ctype_digit($_POST['edit_caption'])){
   $st = $pdo->prepare('UPDATE gallery SET caption = ? WHERE id = ?');
   $st->execute([$caption, $id]);
   flash('ok','Keterangan galeri diperbarui.');
+  header('Location: gallery.php'); exit;
+}
+
+if(isset($_POST['edit_testimonial']) && ctype_digit($_POST['edit_testimonial'])){
+  $id = (int)$_POST['edit_testimonial'];
+  $caption = trim($_POST['caption'] ?? '');
+  $st = $pdo->prepare('UPDATE testimonials SET caption = ? WHERE id = ?');
+  $st->execute([$caption, $id]);
+  flash('ok','Keterangan testimoni diperbarui.');
   header('Location: gallery.php'); exit;
 }
 
@@ -50,9 +68,23 @@ if(isset($_POST['del']) && ctype_digit($_POST['del'])){
   header('Location: gallery.php'); exit;
 }
 
+if(isset($_POST['del_testimonial']) && ctype_digit($_POST['del_testimonial'])){
+  $id = (int)$_POST['del_testimonial'];
+  $it = $pdo->prepare('SELECT * FROM testimonials WHERE id=?');
+  $it->execute([$id]);
+  $testimonial = $it->fetch(PDO::FETCH_ASSOC);
+  if($testimonial){
+    if(is_file($testimonialDir.'/'.$testimonial['image'])) unlink($testimonialDir.'/'.$testimonial['image']);
+    $pdo->prepare('DELETE FROM testimonials WHERE id=?')->execute([$id]);
+    flash('ok','Testimoni dihapus.');
+  }
+  header('Location: gallery.php'); exit;
+}
+
 $ok = flash('ok');
 $err = flash('err');
 $items = $pdo->query('SELECT * FROM gallery ORDER BY created_at DESC')->fetchAll(PDO::FETCH_ASSOC);
+$testimonials = $pdo->query('SELECT * FROM testimonials ORDER BY created_at DESC')->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html lang="id">
@@ -99,14 +131,14 @@ $items = $pdo->query('SELECT * FROM gallery ORDER BY created_at DESC')->fetchAll
         <button class="cta" type="submit"><i class="fa-solid fa-upload"></i> Upload</button>
       </form>
 
-      <form method="post" class="admin-card admin-section admin-form">
-        <input type="hidden" name="add_video" value="1">
-        <h2>Tambah Video YouTube</h2>
-        <label>YouTube ID
-          <input name="youtube_id" placeholder="mis: dQw4w9WgXcQ" required>
+      <form method="post" enctype="multipart/form-data" class="admin-card admin-section admin-form">
+        <input type="hidden" name="add_testimonial" value="1">
+        <h2>Tambah Testimoni Pelanggan</h2>
+        <label>File Testimoni
+          <input type="file" name="testimonial_img" accept=".jpg,.jpeg,.png,.webp" required>
         </label>
         <label>Caption
-          <input name="caption" placeholder="Keterangan video">
+          <input name="caption" placeholder="Keterangan testimoni">
         </label>
         <button class="cta" type="submit"><i class="fa-solid fa-plus"></i> Tambah</button>
       </form>
@@ -143,6 +175,43 @@ $items = $pdo->query('SELECT * FROM gallery ORDER BY created_at DESC')->fetchAll
                   <button class="btn compact" type="submit" form="edit-caption-<?= h((string)$it['id']) ?>">Simpan</button>
                   <form method="post" class="delete-gallery-form" onsubmit="return confirm('Hapus item ini?')">
                     <input type="hidden" name="del" value="<?= h((string)$it['id']) ?>">
+                    <button class="btn danger compact" type="submit">Hapus</button>
+                  </form>
+                </div>
+              </div>
+            </article>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+    </section>
+
+    <section class="admin-card admin-section" style="margin-top:18px">
+      <h2>List Testimoni Pelanggan</h2>
+      <?php if(!$testimonials): ?>
+        <p class="admin-muted">Belum ada testimoni pelanggan tambahan.</p>
+      <?php else: ?>
+        <div class="admin-gallery">
+          <?php foreach($testimonials as $it): ?>
+            <article class="admin-gallery-item">
+              <div class="admin-thumb">
+                <img src="../uploads/testimonials/<?= h($it['image']) ?>" alt="<?= h($it['caption'] ?: 'Testimoni pelanggan') ?>">
+              </div>
+              <div class="admin-meta">
+                <form method="post" class="caption-edit-form" id="edit-testimonial-<?= h((string)$it['id']) ?>">
+                  <input type="hidden" name="edit_testimonial" value="<?= h((string)$it['id']) ?>">
+                  <label class="sr-only" for="testimonial-caption-<?= h((string)$it['id']) ?>">Keterangan testimoni</label>
+                  <input
+                    id="testimonial-caption-<?= h((string)$it['id']) ?>"
+                    name="caption"
+                    value="<?= h($it['caption']) ?>"
+                    placeholder="Testimoni"
+                    maxlength="160"
+                  >
+                </form>
+                <div class="gallery-item-actions">
+                  <button class="btn compact" type="submit" form="edit-testimonial-<?= h((string)$it['id']) ?>">Simpan</button>
+                  <form method="post" class="delete-gallery-form" onsubmit="return confirm('Hapus testimoni ini?')">
+                    <input type="hidden" name="del_testimonial" value="<?= h((string)$it['id']) ?>">
                     <button class="btn danger compact" type="submit">Hapus</button>
                   </form>
                 </div>

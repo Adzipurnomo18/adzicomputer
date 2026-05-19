@@ -35,6 +35,12 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS messages (
   is_read INTEGER DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
+$pdo->exec("CREATE TABLE IF NOT EXISTS testimonials (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  image TEXT NOT NULL,
+  caption TEXT DEFAULT '',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)");
 
 // helper
 function h($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }

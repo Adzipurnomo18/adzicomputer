@@ -7,14 +7,22 @@ if (str_starts_with($waNumber, '0')) {
 $waLink = 'https://wa.me/' . $waNumber . '?text=' . $waText;
 $galleryItems = $pdo->query("SELECT * FROM gallery WHERE type = 'image' ORDER BY created_at DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
 $allGalleryItems = $pdo->query("SELECT * FROM gallery WHERE type = 'image' ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
+$testimonialRows = $pdo->query("SELECT * FROM testimonials ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
 $testimonialFiles = glob(__DIR__ . '/../assets/img/gambar/testimoni*.{png,jpg,jpeg,webp}', GLOB_BRACE) ?: [];
 natsort($testimonialFiles);
-$testimonialImages = array_values(array_map(function($file, $index){
+$uploadedTestimonials = array_map(function($item, $index){
+  return [
+    'src' => 'uploads/testimonials/' . $item['image'],
+    'alt' => $item['caption'] ?: 'Testimoni pelanggan ADZI Computer ' . ($index + 1),
+  ];
+}, $testimonialRows, array_keys($testimonialRows));
+$defaultTestimonials = array_values(array_map(function($file, $index){
   return [
     'src' => 'assets/img/gambar/' . basename($file),
     'alt' => 'Testimoni pelanggan ADZI Computer ' . ($index + 1),
   ];
 }, array_values($testimonialFiles), array_keys(array_values($testimonialFiles))));
+$testimonialImages = array_merge($uploadedTestimonials, $defaultTestimonials);
 ?>
 
 <section class="home-hero">

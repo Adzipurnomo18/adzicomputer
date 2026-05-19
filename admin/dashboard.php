@@ -1,6 +1,7 @@
 <?php
 require __DIR__.'/guard.php';
 $galleryCount = (int)$pdo->query('SELECT COUNT(*) FROM gallery')->fetchColumn();
+$testimonialCount = (int)$pdo->query('SELECT COUNT(*) FROM testimonials')->fetchColumn();
 $messageCount = (int)$pdo->query('SELECT COUNT(*) FROM messages')->fetchColumn();
 $unreadCount = (int)$pdo->query('SELECT COUNT(*) FROM messages WHERE is_read = 0')->fetchColumn();
 ?>
@@ -35,9 +36,10 @@ $unreadCount = (int)$pdo->query('SELECT COUNT(*) FROM messages WHERE is_read = 0
 
     <section class="admin-card admin-section">
       <h2>Ringkasan</h2>
-      <p class="admin-muted">Kelola gambar/video galeri serta pesan yang masuk dari formulir kontak.</p>
+      <p class="admin-muted">Kelola galeri, testimoni pelanggan, serta pesan yang masuk dari formulir kontak.</p>
       <div class="admin-stat-grid">
         <article class="admin-stat"><i class="fa-regular fa-images"></i><strong><?= h((string)$galleryCount) ?></strong><span>Item Galeri</span></article>
+        <article class="admin-stat"><i class="fa-regular fa-star"></i><strong><?= h((string)$testimonialCount) ?></strong><span>Testimoni</span></article>
         <article class="admin-stat"><i class="fa-regular fa-envelope"></i><strong><?= h((string)$messageCount) ?></strong><span>Total Pesan</span></article>
         <article class="admin-stat"><i class="fa-regular fa-bell"></i><strong><?= h((string)$unreadCount) ?></strong><span>Pesan Baru</span></article>
       </div>
