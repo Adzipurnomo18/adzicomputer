@@ -30,6 +30,15 @@ if(isset($_POST['add_video'])){
   }
 }
 
+if(isset($_POST['edit_caption']) && ctype_digit($_POST['edit_caption'])){
+  $id = (int)$_POST['edit_caption'];
+  $caption = trim($_POST['caption'] ?? '');
+  $st = $pdo->prepare('UPDATE gallery SET caption = ? WHERE id = ?');
+  $st->execute([$caption, $id]);
+  flash('ok','Keterangan galeri diperbarui.');
+  header('Location: gallery.php'); exit;
+}
+
 if(isset($_POST['del']) && ctype_digit($_POST['del'])){
   $id = (int)$_POST['del'];
   $it = $pdo->query('SELECT * FROM gallery WHERE id='.$id)->fetch(PDO::FETCH_ASSOC);
@@ -119,11 +128,24 @@ $items = $pdo->query('SELECT * FROM gallery ORDER BY created_at DESC')->fetchAll
                 <?php endif; ?>
               </div>
               <div class="admin-meta">
-                <div class="admin-caption"><?= h($it['caption'] ?: ucfirst($it['type'])) ?></div>
-                <form method="post" onsubmit="return confirm('Hapus item ini?')">
-                  <input type="hidden" name="del" value="<?= h((string)$it['id']) ?>">
-                  <button class="btn danger" type="submit">Hapus</button>
+                <form method="post" class="caption-edit-form" id="edit-caption-<?= h((string)$it['id']) ?>">
+                  <input type="hidden" name="edit_caption" value="<?= h((string)$it['id']) ?>">
+                  <label class="sr-only" for="caption-<?= h((string)$it['id']) ?>">Keterangan galeri</label>
+                  <input
+                    id="caption-<?= h((string)$it['id']) ?>"
+                    name="caption"
+                    value="<?= h($it['caption']) ?>"
+                    placeholder="<?= h(ucfirst($it['type'])) ?>"
+                    maxlength="160"
+                  >
                 </form>
+                <div class="gallery-item-actions">
+                  <button class="btn compact" type="submit" form="edit-caption-<?= h((string)$it['id']) ?>">Simpan</button>
+                  <form method="post" class="delete-gallery-form" onsubmit="return confirm('Hapus item ini?')">
+                    <input type="hidden" name="del" value="<?= h((string)$it['id']) ?>">
+                    <button class="btn danger compact" type="submit">Hapus</button>
+                  </form>
+                </div>
               </div>
             </article>
           <?php endforeach; ?>
