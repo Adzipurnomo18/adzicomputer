@@ -29,6 +29,18 @@ if (is_file($abs)) {
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title><?= h($docTitle) ?></title>
   <meta name="description" content="Service laptop, PC, dan elektronik cepat, rapi, transparan, dan bergaransi."/>
+  <script>
+    (function(){
+      try {
+        var saved = localStorage.getItem('adzi-theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('theme-dark');
+          document.write('<link rel="preload" as="image" href="assets/img/gambar/01_logo_dark.png">');
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,7 +53,12 @@ if (is_file($abs)) {
 <body data-page="<?= h($active) ?>">
   <nav class="nav" id="nav">
     <a class="brand" href="index.php?page=home" aria-label="<?= h($CONFIG['brand']) ?>">
-      <img src="assets/img/gambar/01_logo.png" alt="<?= h($CONFIG['brand']) ?>">
+      <img
+        src="assets/img/gambar/01_logo.png"
+        alt="<?= h($CONFIG['brand']) ?>"
+        data-logo-light="assets/img/gambar/01_logo.png"
+        data-logo-dark="assets/img/gambar/01_logo_dark.png"
+      >
     </a>
 
     <div class="nav-menu">
@@ -55,6 +72,10 @@ if (is_file($abs)) {
     <a class="cta nav-cta" href="https://wa.me/<?= h($waNumber) ?>?text=Halo%2C%20butuh%20servis" target="_blank">
       <i class="fa-brands fa-whatsapp"></i> Chat WhatsApp
     </a>
+
+    <button class="theme-toggle" type="button" aria-label="Aktifkan dark mode" aria-pressed="false" data-theme-toggle>
+      <i class="fa-regular fa-moon"></i>
+    </button>
 
     <button class="nav-burger" type="button" aria-label="Buka menu">
       <span></span><span></span><span></span>

@@ -419,6 +419,86 @@
 .cta-panel small{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:14px;color:#6a7180;font-size:13px}
 .qr-code{width:118px;height:118px;object-fit:contain;border:2px solid var(--red);border-radius:8px;padding:5px;background:#fff;justify-self:end}
 
+html.theme-dark .rating-badge,
+html.theme-dark .stats-bar,
+html.theme-dark .service-card,
+html.theme-dark .why-card,
+html.theme-dark .proof-panel,
+html.theme-dark .inline-gallery-box,
+html.theme-dark .cta-panel{
+  background:var(--surface);
+  border-color:var(--line);
+}
+html.theme-dark .rating-badge,
+html.theme-dark .hero-copy h1,
+html.theme-dark .service-card h3,
+html.theme-dark .service-card li,
+html.theme-dark .service-card>a,
+html.theme-dark .why-card h3,
+html.theme-dark .panel-head h2,
+html.theme-dark .inline-gallery-head h2,
+html.theme-dark .cta-panel h2,
+html.theme-dark .stats-bar strong{
+  color:var(--text);
+}
+html.theme-dark .hero-copy p,
+html.theme-dark .feature-card span,
+html.theme-dark .stats-bar span,
+html.theme-dark .service-card p,
+html.theme-dark .service-price,
+html.theme-dark .why-copy p,
+html.theme-dark .why-card p,
+html.theme-dark .cta-panel p,
+html.theme-dark .cta-panel small{
+  color:var(--muted);
+}
+html.theme-dark .rating-badge b,
+html.theme-dark .cta-panel small b{
+  background:#d7dce8;
+}
+html.theme-dark .service-icon{
+  background:linear-gradient(180deg,rgba(255,48,48,.18),rgba(255,48,48,.07));
+  border-color:rgba(255,48,48,.35);
+}
+html.theme-dark .service-card ul,
+html.theme-dark .inline-gallery-head,
+html.theme-dark .stats-bar article,
+html.theme-dark .stats-bar article:nth-child(-n+2){
+  border-color:var(--line);
+}
+html.theme-dark .service-card>a{
+  border-color:var(--line);
+}
+html.theme-dark .service-card>a:hover{
+  border-color:rgba(255,48,48,.52);
+  color:var(--red);
+}
+html.theme-dark .gallery-card,
+html.theme-dark .inline-gallery-item{
+  background:#10141d;
+  border-color:var(--line);
+}
+html.theme-dark .testimonial-nav,
+html.theme-dark .inline-gallery-head button{
+  color:var(--red);
+  background:#171c27;
+  border-color:rgba(255,48,48,.28);
+}
+html.theme-dark .testimonial-nav:hover,
+html.theme-dark .inline-gallery-head button:hover{
+  color:#fff;
+  background:var(--red);
+  border-color:var(--red);
+}
+html.theme-dark .slider-dots i,
+html.theme-dark .testimonial-dots button{
+  background:#444b5b;
+}
+html.theme-dark .testimonial-all-grid .inline-gallery-item,
+html.theme-dark .qr-code{
+  background:#fff;
+}
+
 @media (max-width:1060px){
   .hero-grid{grid-template-columns:1fr;gap:20px}
   .hero-visual{min-height:auto;place-items:center}
@@ -444,15 +524,38 @@
   .rating-badge{font-size:12px}
   .hero-actions,.feature-list{grid-template-columns:1fr}
   .feature-list,.service-grid,.stats-bar{grid-template-columns:1fr}
-  .stats-bar article{justify-content:flex-start;border-right:0;border-bottom:1px solid #dfe2e8}
+  .feature-card{text-align:center}
+  .feature-card i{margin-inline:auto}
+  .stats-bar article{
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+    border-right:0;
+    border-bottom:1px solid #dfe2e8;
+  }
   .stats-bar article:last-child{border-bottom:0}
-  .service-card{text-align:left}
-  .service-icon{margin-left:0}
+  .service-card{text-align:center}
+  .service-icon{margin-inline:auto}
+  .service-card ul{
+    width:max-content;
+    max-width:100%;
+    margin-inline:auto;
+    text-align:left;
+  }
+  .service-price{text-align:center}
+  .why-copy{text-align:center}
+  .why-copy h2,.why-copy p{margin-inline:auto}
+  .why-card{
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+  }
   .before-gallery{grid-template-columns:repeat(2,1fr)}
   .testimonial-track,.testimonial-slider{min-height:178px}
   .cta-panel{padding:22px}
   .cta-panel h2{font-size:24px}
   .cta-large{min-width:0}
+  .qr-code{justify-self:center}
   .inline-gallery-modal{padding:12px}
   .inline-gallery-box{max-height:calc(100dvh - 24px)}
   .inline-gallery-head{padding:18px 16px 12px}

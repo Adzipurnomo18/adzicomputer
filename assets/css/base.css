@@ -14,6 +14,21 @@
   --container:1110px;
 }
 
+html.theme-dark{
+  color-scheme:dark;
+  --bg:#0d1017;
+  --surface:#151923;
+  --text:#f5f7fb;
+  --muted:#aab2c2;
+  --line:#2a3140;
+  --soft:#11151e;
+  --red:#ff3030;
+  --red-dark:#e10e0e;
+  --red-soft:rgba(255,48,48,.13);
+  --shadow:0 20px 50px rgba(0,0,0,.34);
+  --shadow-sm:0 12px 30px rgba(0,0,0,.28);
+}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 html,body{min-height:100%}
@@ -25,6 +40,11 @@ body{
     radial-gradient(circle at 90% 8%, rgba(239,18,18,.06), transparent 34%),
     linear-gradient(180deg,#fff 0%,#fff 45%,#fbfbfd 100%);
   overflow-x:hidden;
+}
+html.theme-dark body{
+  background:
+    radial-gradient(circle at 90% 8%, rgba(255,48,48,.12), transparent 32%),
+    linear-gradient(180deg,#0d1017 0%,#10141d 48%,#0b0e14 100%);
 }
 body::before{
   content:"";
@@ -41,6 +61,7 @@ body::before{
   background-size:72px 52px;
   mask-image:linear-gradient(90deg,transparent,#000 22%,#000 80%,transparent);
 }
+html.theme-dark body::before{opacity:.24}
 
 a{color:inherit}
 img{max-width:100%;display:block}
@@ -62,6 +83,11 @@ main{position:relative;z-index:1}
   backdrop-filter:blur(14px);
   transition:transform .25s ease,box-shadow .25s ease;
 }
+html.theme-dark .nav{
+  background:rgba(13,16,23,.9);
+  border-bottom-color:var(--line);
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
+}
 .nav.hide{transform:translateY(-100%)}
 .brand{display:flex;align-items:center;flex:0 0 auto;text-decoration:none}
 .brand img{width:194px;height:auto}
@@ -77,6 +103,7 @@ main{position:relative;z-index:1}
   text-decoration:none;
   white-space:nowrap;
 }
+html.theme-dark .nav .link{color:#f5f7fb}
 .nav .link::after{
   content:"";
   position:absolute;
@@ -120,7 +147,49 @@ main{position:relative;z-index:1}
   box-shadow:0 10px 26px rgba(12,18,32,.05);
 }
 .btn:hover{border-color:#f4b6b6;background:#fffafa}
+html.theme-dark .btn{
+  color:var(--text);
+  background:#171c27;
+  border-color:var(--line);
+  box-shadow:none;
+}
+html.theme-dark .btn:hover{
+  border-color:rgba(255,48,48,.48);
+  background:#1d2330;
+}
 .nav-cta{flex:0 0 auto}
+
+.theme-toggle{
+  width:42px;
+  height:42px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  padding:0;
+  color:#11131a;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:7px;
+  box-shadow:0 10px 26px rgba(12,18,32,.05);
+  cursor:pointer;
+  transition:color .18s ease,background .18s ease,border-color .18s ease,transform .18s ease;
+}
+.theme-toggle:hover{
+  color:var(--red);
+  border-color:#f4b6b6;
+  transform:translateY(-1px);
+}
+html.theme-dark .theme-toggle{
+  color:#ffd8d8;
+  background:#171c27;
+  border-color:var(--line);
+  box-shadow:none;
+}
+html.theme-dark .theme-toggle:hover{
+  color:#fff;
+  border-color:rgba(255,48,48,.48);
+  background:#211b22;
+}
 
 .nav-burger{
   display:none;
@@ -137,12 +206,22 @@ main{position:relative;z-index:1}
 }
 .nav-burger span{width:20px;height:2px;background:#14161d;border-radius:99px;transition:.2s ease}
 .nav-backdrop{display:none}
+html.theme-dark .nav-burger{
+  background:#171c27;
+  border-color:var(--line);
+}
+html.theme-dark .nav-burger span{background:#f5f7fb}
 
 .panel,.card{
   background:#fff;
   border:1px solid var(--line);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
+}
+html.theme-dark .panel,
+html.theme-dark .card{
+  background:var(--surface);
+  border-color:var(--line);
 }
 .badge{
   display:inline-flex;
@@ -154,6 +233,10 @@ main{position:relative;z-index:1}
   border:1px solid var(--line);
   box-shadow:var(--shadow-sm);
 }
+html.theme-dark .badge{
+  background:var(--surface);
+  border-color:var(--line);
+}
 .note{color:var(--muted);font-size:14px}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
 .reveal.show{opacity:1;transform:none}
@@ -164,6 +247,10 @@ footer{
   text-align:center;
   font-size:13px;
   background:#fbfbfd;
+}
+html.theme-dark footer{
+  color:#858fa3;
+  background:#0b0e14;
 }
 
 @media (max-width:1024px){
@@ -197,6 +284,10 @@ footer{
     border-radius:8px;
     box-shadow:var(--shadow);
     z-index:60;
+  }
+  html.theme-dark .nav-menu{
+    background:#151923;
+    border-color:var(--line);
   }
   .nav.open .nav-menu{display:flex}
   .nav .link{
