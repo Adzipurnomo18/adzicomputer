@@ -243,16 +243,48 @@ html.theme-dark .badge{
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
 .reveal.show{opacity:1;transform:none}
 
-footer{
-  padding:24px 16px 38px;
-  color:#858b97;
-  text-align:center;
+.site-footer{
+  padding:20px 0;
+  color:#6b7280;
   font-size:13px;
   background:#fbfbfd;
+  border-top:1px solid var(--line);
 }
-html.theme-dark footer{
-  color:#858fa3;
-  background:#0b0e14;
+.footer-inner{
+  display:grid;
+  grid-template-columns:180px 1fr 180px;
+  align-items:center;
+  gap:18px;
+}
+.footer-inner img{width:142px;height:auto}
+.footer-inner p{
+  margin:0;
+  text-align:center;
+}
+.footer-social{
+  display:flex;
+  justify-content:flex-end;
+  gap:14px;
+}
+.footer-social span{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  color:#4b5563;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:50%;
+}
+html.theme-dark .site-footer{
+  color:#d8dde7;
+  background:linear-gradient(180deg,#111820,#080d13);
+  border-top-color:rgba(255,255,255,.08);
+}
+html.theme-dark .footer-social span{
+  color:#d8dde7;
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.08);
 }
 
 @media (max-width:1024px){
@@ -363,4 +395,10 @@ html.theme-dark footer{
   .container{width:min(var(--container),calc(100% - 22px))}
   .brand img{width:132px}
   .cta,.btn{width:100%;padding-inline:14px}
+  .footer-inner{
+    grid-template-columns:1fr;
+    justify-items:center;
+    text-align:center;
+  }
+  .footer-social{justify-content:center}
 }

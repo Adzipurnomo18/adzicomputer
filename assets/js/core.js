@@ -22,7 +22,7 @@
       const saved = localStorage.getItem(storageKey);
       if(saved === 'dark' || saved === 'light') return saved;
     } catch(e) {}
-    return document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light';
+    return 'light';
   }
 
   function applyTheme(theme){

@@ -33,8 +33,7 @@ if (is_file($abs)) {
     (function(){
       try {
         var saved = localStorage.getItem('adzi-theme');
-        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (saved === 'dark' || (!saved && prefersDark)) {
+        if (saved === 'dark') {
           document.documentElement.classList.add('theme-dark');
           document.write('<link rel="preload" as="image" href="assets/img/gambar/01_logo_dark.png">');
         }
