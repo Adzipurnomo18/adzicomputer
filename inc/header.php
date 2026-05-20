@@ -61,12 +61,32 @@ if (is_file($abs)) {
       >
     </a>
 
-    <div class="nav-menu">
-      <a href="index.php?page=home" class="link <?= $active==='home' ? 'active' : '' ?>">Home</a>
-      <a href="index.php?page=home#layanan" class="link">Layanan</a>
-      <a href="index.php?page=katalog" class="link <?= $active==='katalog' ? 'active' : '' ?>">Katalog Servis</a>
-      <a href="index.php?page=home#tentang" class="link">Tentang Kami</a>
-      <a href="index.php?page=kontak" class="link <?= $active==='kontak' ? 'active' : '' ?>">Kontak</a>
+    <div class="nav-menu" id="nav-menu">
+      <a href="index.php?page=home" class="link <?= $active==='home' ? 'active' : '' ?>">
+        <i class="fa-solid fa-house nav-icon" aria-hidden="true"></i>
+        <span class="nav-label-full">Home</span>
+        <span class="nav-label-short">Home</span>
+      </a>
+      <a href="index.php?page=home#layanan" class="link">
+        <i class="fa-solid fa-screwdriver-wrench nav-icon" aria-hidden="true"></i>
+        <span class="nav-label-full">Layanan</span>
+        <span class="nav-label-short">Layanan</span>
+      </a>
+      <a href="index.php?page=katalog" class="link <?= $active==='katalog' ? 'active' : '' ?>">
+        <i class="fa-solid fa-list-check nav-icon" aria-hidden="true"></i>
+        <span class="nav-label-full">Katalog Servis</span>
+        <span class="nav-label-short">Katalog</span>
+      </a>
+      <a href="index.php?page=home#tentang" class="link">
+        <i class="fa-solid fa-circle-info nav-icon" aria-hidden="true"></i>
+        <span class="nav-label-full">Tentang Kami</span>
+        <span class="nav-label-short">Tentang</span>
+      </a>
+      <a href="index.php?page=kontak" class="link <?= $active==='kontak' ? 'active' : '' ?>">
+        <i class="fa-solid fa-location-dot nav-icon" aria-hidden="true"></i>
+        <span class="nav-label-full">Kontak</span>
+        <span class="nav-label-short">Kontak</span>
+      </a>
     </div>
 
     <a class="cta nav-cta" href="https://wa.me/<?= h($waNumber) ?>?text=Halo%2C%20butuh%20servis" target="_blank">
@@ -77,7 +97,7 @@ if (is_file($abs)) {
       <i class="fa-regular fa-moon"></i>
     </button>
 
-    <button class="nav-burger" type="button" aria-label="Buka menu">
+    <button class="nav-burger" type="button" aria-label="Buka menu" aria-controls="nav-menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </nav>

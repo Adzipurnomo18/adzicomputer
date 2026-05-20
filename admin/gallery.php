@@ -108,12 +108,13 @@ $testimonials = $pdo->query('SELECT * FROM testimonials ORDER BY created_at DESC
         <img src="../assets/img/gambar/01_logo.png" alt="<?= h($CONFIG['brand']) ?>">
         <div><span>ADMIN PANEL</span><h1>Galeri</h1></div>
       </div>
-      <nav class="admin-nav">
-        <a class="btn" href="dashboard.php">Dashboard</a>
-        <a class="btn" href="messages.php">Pesan</a>
-        <a class="cta" href="logout.php">Logout</a>
-      </nav>
     </header>
+    <nav class="admin-nav">
+      <a class="btn" href="dashboard.php"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a>
+      <a class="btn active" href="gallery.php"><i class="fa-regular fa-images"></i><span>Galeri</span></a>
+      <a class="btn" href="messages.php"><i class="fa-regular fa-envelope"></i><span>Pesan</span></a>
+      <a class="cta" href="logout.php" data-confirm-logout><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
 
     <?php if($ok): ?><div class="admin-alert success"><?= h($ok) ?></div><?php endif; ?>
     <?php if($err): ?><div class="admin-alert error"><?= h($err) ?></div><?php endif; ?>
@@ -222,5 +223,7 @@ $testimonials = $pdo->query('SELECT * FROM testimonials ORDER BY created_at DESC
       <?php endif; ?>
     </section>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../assets/js/admin.js"></script>
 </body>
 </html>

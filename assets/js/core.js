@@ -115,10 +115,15 @@
     const backdrop = document.querySelector('.nav-backdrop');
     if(!nav || !burger) return;
 
-    function closeNav(){ nav.classList.remove('open'); }
+    function setNav(open){
+      nav.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+    }
+    function closeNav(){ setNav(false); }
     burger.addEventListener('click',(e)=>{
       e.preventDefault();
-      nav.classList.toggle('open');
+      if(window.matchMedia('(max-width: 860px)').matches) return;
+      setNav(!nav.classList.contains('open'));
       nav.classList.remove('hide');
     });
     backdrop?.addEventListener('click', closeNav);
