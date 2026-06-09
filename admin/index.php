@@ -5,8 +5,20 @@ $err = null;
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
   $u = trim($_POST['u'] ?? '');
   $p = trim($_POST['p'] ?? '');
-  if($u === $CONFIG['admin_user'] && password_verify($p, $CONFIG['admin_pass_hash'])){
-    $_SESSION['admin'] = ['u'=>$u,'t'=>time()];
+  $admin = null;
+  try {
+    $st = $pdo->prepare('SELECT * FROM admins WHERE username = ? AND is_active = 1 LIMIT 1');
+    $st->execute([$u]);
+    $admin = $st->fetch(PDO::FETCH_ASSOC);
+  } catch (Throwable $e) {
+    $admin = null;
+  }
+  if($admin && password_verify($p, $admin['password_hash'])){
+    $_SESSION['admin'] = ['id'=>(int)$admin['id'],'u'=>$admin['username'],'name'=>$admin['display_name'],'role'=>$admin['role'],'t'=>time()];
+    header('Location: dashboard.php'); exit;
+  }
+  if(!$admin && $u === $CONFIG['admin_user'] && password_verify($p, $CONFIG['admin_pass_hash'])){
+    $_SESSION['admin'] = ['id'=>0,'u'=>$u,'name'=>'Admin','role'=>'Super Admin','t'=>time()];
     header('Location: dashboard.php'); exit;
   }
   $err = 'Login gagal.';

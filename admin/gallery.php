@@ -1,5 +1,6 @@
 <?php
 require __DIR__.'/guard.php';
+require __DIR__ . '/partials/layout.php';
 $uploadDir = __DIR__.'/../uploads/gallery';
 if(!is_dir($uploadDir)) mkdir($uploadDir,0777,true);
 $testimonialDir = __DIR__.'/../uploads/testimonials';
@@ -85,36 +86,8 @@ $ok = flash('ok');
 $err = flash('err');
 $items = $pdo->query('SELECT * FROM gallery ORDER BY created_at DESC')->fetchAll(PDO::FETCH_ASSOC);
 $testimonials = $pdo->query('SELECT * FROM testimonials ORDER BY created_at DESC')->fetchAll(PDO::FETCH_ASSOC);
+admin_page_start('Galeri', 'gallery', 'Kelola galeri dan testimoni');
 ?>
-<!doctype html>
-<html lang="id">
-<head>
-  <link rel="icon" type="image/x-icon" href="../favicon.ico?v=3">
-  <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico?v=3">
-  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png?v=3">
-  <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=3">
-  <meta name="theme-color" content="#ef1212">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin - Galeri</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../assets/css/base.css">
-  <link rel="stylesheet" href="../assets/css/admin.css">
-</head>
-<body class="admin-body">
-  <div class="admin-shell">
-    <header class="admin-topbar">
-      <div class="admin-brand">
-        <img src="../assets/img/gambar/01_logo.png" alt="<?= h($CONFIG['brand']) ?>">
-        <div><span>ADMIN PANEL</span><h1>Galeri</h1></div>
-      </div>
-    </header>
-    <nav class="admin-nav">
-      <a class="btn" href="dashboard.php"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a>
-      <a class="btn active" href="gallery.php"><i class="fa-regular fa-images"></i><span>Galeri</span></a>
-      <a class="btn" href="messages.php"><i class="fa-regular fa-envelope"></i><span>Pesan</span></a>
-      <a class="cta" href="logout.php" data-confirm-logout><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
-    </nav>
 
     <?php if($ok): ?><div class="admin-alert success"><?= h($ok) ?></div><?php endif; ?>
     <?php if($err): ?><div class="admin-alert error"><?= h($err) ?></div><?php endif; ?>
@@ -222,8 +195,4 @@ $testimonials = $pdo->query('SELECT * FROM testimonials ORDER BY created_at DESC
         </div>
       <?php endif; ?>
     </section>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="../assets/js/admin.js"></script>
-</body>
-</html>
+<?php admin_page_end(); ?>

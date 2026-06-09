@@ -41,6 +41,59 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS testimonials (
   caption TEXT DEFAULT '',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
+$pdo->exec("CREATE TABLE IF NOT EXISTS admins (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT NOT NULL UNIQUE,
+  display_name TEXT NOT NULL DEFAULT 'Admin',
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'Super Admin',
+  is_active INTEGER NOT NULL DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)");
+$adminCount = (int)$pdo->query('SELECT COUNT(*) FROM admins')->fetchColumn();
+if ($adminCount === 0) {
+  $st = $pdo->prepare('INSERT INTO admins(username, display_name, password_hash, role) VALUES(?,?,?,?)');
+  $st->execute([$CONFIG['admin_user'], 'Admin', $CONFIG['admin_pass_hash'], 'Super Admin']);
+}
+$pdo->exec("CREATE TABLE IF NOT EXISTS service_invoices (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  invoice_no TEXT NOT NULL UNIQUE,
+  service_date DATE NOT NULL,
+  customer_name TEXT NOT NULL,
+  customer_phone TEXT DEFAULT '',
+  customer_address TEXT DEFAULT '',
+  device_type TEXT NOT NULL,
+  device_model TEXT DEFAULT '',
+  complaint TEXT DEFAULT '',
+  discount INTEGER DEFAULT 0,
+  warranty_days INTEGER DEFAULT 30,
+  notes TEXT DEFAULT '',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)");
+$pdo->exec("CREATE TABLE IF NOT EXISTS service_invoice_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  invoice_id INTEGER NOT NULL,
+  description TEXT NOT NULL,
+  detail TEXT DEFAULT '',
+  qty INTEGER NOT NULL DEFAULT 1,
+  part_price INTEGER NOT NULL DEFAULT 0,
+  service_price INTEGER NOT NULL DEFAULT 0,
+  unit_price INTEGER NOT NULL DEFAULT 0,
+  position INTEGER NOT NULL DEFAULT 1,
+  FOREIGN KEY(invoice_id) REFERENCES service_invoices(id) ON DELETE CASCADE
+)");
+$invoiceItemColumns = $pdo->query("PRAGMA table_info(service_invoice_items)")->fetchAll(PDO::FETCH_COLUMN, 1);
+if (!in_array('part_price', $invoiceItemColumns, true)) {
+  $pdo->exec("ALTER TABLE service_invoice_items ADD COLUMN part_price INTEGER NOT NULL DEFAULT 0");
+}
+if (!in_array('service_price', $invoiceItemColumns, true)) {
+  $pdo->exec("ALTER TABLE service_invoice_items ADD COLUMN service_price INTEGER NOT NULL DEFAULT 0");
+}
+$pdo->exec("UPDATE service_invoice_items
+  SET service_price = unit_price
+  WHERE service_price = 0 AND part_price = 0 AND unit_price > 0");
 
 // helper
 function h($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }

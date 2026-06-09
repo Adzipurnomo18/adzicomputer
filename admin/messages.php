@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/guard.php';
+require __DIR__ . '/partials/layout.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['read']) && ctype_digit($_POST['read'])) {
@@ -11,40 +12,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   header('Location: messages.php'); exit;
 }
 
-$rows = $pdo->query('SELECT * FROM messages ORDER BY created_at DESC')->fetchAll(PDO::FETCH_ASSOC);
+$filter = $_GET['filter'] ?? '';
+if ($filter === 'unread') {
+  $rows = $pdo->query('SELECT * FROM messages WHERE is_read = 0 ORDER BY created_at DESC')->fetchAll(PDO::FETCH_ASSOC);
+  $subtitle = 'Pesan pelanggan yang belum dibaca';
+} else {
+  $rows = $pdo->query('SELECT * FROM messages ORDER BY created_at DESC')->fetchAll(PDO::FETCH_ASSOC);
+  $subtitle = 'Kelola pesan pelanggan';
+}
+admin_page_start('Pesan Masuk', 'messages', $subtitle);
 ?>
-<!doctype html>
-<html lang="id">
-<head>
-  <link rel="icon" type="image/x-icon" href="../favicon.ico?v=3">
-  <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico?v=3">
-  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png?v=3">
-  <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=3">
-  <meta name="theme-color" content="#ef1212">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin - Pesan</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../assets/css/base.css">
-  <link rel="stylesheet" href="../assets/css/admin.css">
-</head>
-<body class="admin-body">
-  <div class="admin-shell">
-    <header class="admin-topbar">
-      <div class="admin-brand">
-        <img src="../assets/img/gambar/01_logo.png" alt="<?= h($CONFIG['brand']) ?>">
-        <div><span>ADMIN PANEL</span><h1>Pesan Masuk</h1></div>
-      </div>
-    </header>
-    <nav class="admin-nav">
-      <a class="btn" href="dashboard.php"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a>
-      <a class="btn" href="gallery.php"><i class="fa-regular fa-images"></i><span>Galeri</span></a>
-      <a class="btn active" href="messages.php"><i class="fa-regular fa-envelope"></i><span>Pesan</span></a>
-      <a class="cta" href="logout.php" data-confirm-logout><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
-    </nav>
 
     <section class="admin-card admin-section">
-      <h2>Daftar Pesan</h2>
+      <div class="panel-head">
+        <h2><?= $filter === 'unread' ? 'Pesan Belum Dibaca' : 'Daftar Pesan' ?></h2>
+        <?php if($filter === 'unread'): ?><a href="messages.php">Lihat Semua</a><?php endif; ?>
+      </div>
       <?php if(!$rows): ?>
         <p class="admin-muted">Belum ada pesan masuk.</p>
       <?php else: ?>
@@ -91,8 +74,4 @@ $rows = $pdo->query('SELECT * FROM messages ORDER BY created_at DESC')->fetchAll
         </div>
       <?php endif; ?>
     </section>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="../assets/js/admin.js"></script>
-</body>
-</html>
+<?php admin_page_end(); ?>
