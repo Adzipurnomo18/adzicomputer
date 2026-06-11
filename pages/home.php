@@ -72,7 +72,11 @@ $processSteps = [
   <div class="container hero-grid">
     <div class="hero-copy reveal">
       <span class="rating-badge"><i class="fa-solid fa-star"></i> Rating 5.0 <b></b> Cepat, Rapi, Bergaransi</span>
-      <h1>Solusi Cepat &amp; Terpercaya untuk <span>Laptop, PC, dan Elektronik Anda</span></h1>
+      <h1>
+        <span class="hero-title-main">Solusi Cepat &amp; Terpercaya</span>
+        <span class="hero-title-main">untuk</span>
+        <span class="hero-title-accent">Laptop, PC, dan Elektronik Anda</span>
+      </h1>
       <p>Kami siap membantu kebutuhan perbaikan perangkat Anda dengan pemeriksaan jelas, pengerjaan rapi, dan garansi service.</p>
 
       <div class="hero-actions">
