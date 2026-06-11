@@ -7,6 +7,7 @@ $CONFIG = [
   'wa'      => '085880495407',
   'address' => 'Perumahan Permata Land, Blok Ruby H No.5, Bagan Pete, Kec. Kota Baru, Kota Jambi, Jambi 36361',
   'maps'    => 'https://maps.app.goo.gl/aX718QCLTx9SyhN2A',
+  'maps_embed' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.133870883912!2d103.55593239999999!3d-1.6649658999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e2587e31244add1%3A0x8701b461d37129c4!2sService%20Laptop%20dan%20Elektronik!5e0!3m2!1sid!2sid!4v1762330598318!5m2!1sid!2sid',
   'admin_user' => 'adzp18',
   // password hashed: ganti via password_hash('passwordBaru', PASSWORD_BCRYPT)
   'admin_pass_hash' => '$2y$10$fqhrx5Z2FXxLZVcJ6qan4e9N18btTdt.rZFoD4S9zBEgaUXYxJXiy', // default: Adzi@2025

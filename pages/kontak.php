@@ -24,7 +24,7 @@ if (str_starts_with($waNumber, '0')) {
   $waNumber = '62' . substr($waNumber, 1);
 }
 $waLink = 'https://wa.me/' . $waNumber . '?text=' . rawurlencode('Halo ADZI Computer, saya ingin konsultasi servis.');
-$mapsSrc = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.133870883912!2d103.55593239999999!3d-1.6649658999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e2587e31244add1%3A0x8701b461d37129c4!2sService%20Laptop%20dan%20Elektronik!5e0!3m2!1sid!2sid!4v1762330598318!5m2!1sid!2sid';
+$mapsSrc = $CONFIG['maps_embed'];
 ?>
 
 <section id="kontak" class="section-kontak">
