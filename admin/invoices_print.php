@@ -14,6 +14,43 @@ function tanggal_id($date) {
   return $dt->format('d') . ' ' . $months[(int)$dt->format('m')] . ' ' . $dt->format('Y');
 }
 
+function linkify_note($text) {
+  $text = (string)$text;
+  if ($text === '') return '';
+
+  $pattern = '~https?://[^\s<>"\']+~i';
+  if (!preg_match_all($pattern, $text, $matches, PREG_OFFSET_CAPTURE)) {
+    return h($text);
+  }
+
+  $html = '';
+  $offset = 0;
+  foreach ($matches[0] as $match) {
+    [$url, $position] = $match;
+    $html .= h(substr($text, $offset, $position - $offset));
+
+    $trailing = '';
+    while ($url !== '' && preg_match('/[.,!?:;)\]]$/', $url)) {
+      $trailing = substr($url, -1) . $trailing;
+      $url = substr($url, 0, -1);
+    }
+
+    $parts = parse_url($url);
+    $scheme = strtolower($parts['scheme'] ?? '');
+    if ($url !== '' && in_array($scheme, ['http', 'https'], true)) {
+      $safeUrl = h($url);
+      $html .= '<a href="' . $safeUrl . '" target="_blank" rel="noopener noreferrer">' . $safeUrl . '</a>';
+    } else {
+      $html .= h($url);
+    }
+
+    $html .= h($trailing);
+    $offset = $position + strlen($match[0]);
+  }
+
+  return $html . h(substr($text, $offset));
+}
+
 $id = isset($_GET['id']) && ctype_digit($_GET['id']) ? (int)$_GET['id'] : 0;
 $st = $pdo->prepare('SELECT * FROM service_invoices WHERE id = ?');
 $st->execute([$id]);
@@ -134,7 +171,7 @@ $notes = trim((string)$invoice['notes']) !== '' ? preg_split('/\R+/', trim((stri
         <h2><i class="fa-regular fa-file-lines"></i> Catatan</h2>
         <ul>
           <?php foreach($notes as $note): ?>
-            <li><?= h($note) ?></li>
+            <li><?= linkify_note($note) ?></li>
           <?php endforeach; ?>
           <?php if(!$notes): ?>
             <li>Garansi service berlaku <?= h((string)$invoice['warranty_days']) ?> hari sejak tanggal service.</li>

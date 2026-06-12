@@ -1109,6 +1109,14 @@ body.admin-body {
   line-height: 1.45;
 }
 
+.invoice-note-card a {
+  color: #ef1212;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-word;
+}
+
 .invoice-total-card {
   display: grid;
   gap: 12px;
