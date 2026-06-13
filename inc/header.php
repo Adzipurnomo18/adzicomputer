@@ -1,7 +1,14 @@
 <?php
 require __DIR__ . '/boot.php';
 
-$active = $_GET['page'] ?? 'home';
+$active = $active ?? ($_GET['page'] ?? 'home');
+$basePath = $basePath ?? rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+if ($basePath === '.' || $basePath === '/') {
+  $basePath = '';
+}
+$homeUrl = $basePath === '' ? '/' : $basePath . '/';
+$katalogUrl = $basePath . '/katalog';
+$kontakUrl = $basePath . '/kontak';
 $docTitle = ($title ?? $CONFIG['brand']) . ' | ' . $CONFIG['brand'];
 $waNumber = preg_replace('/\D+/', '', $CONFIG['wa']);
 if (str_starts_with($waNumber, '0')) {
@@ -11,8 +18,10 @@ if (str_starts_with($waNumber, '0')) {
 $perPageCssTag = '';
 $abs = __DIR__ . '/../assets/css/' . $active . '.css';
 if (is_file($abs)) {
-  $perPageCssTag = '<link rel="stylesheet" href="assets/css/' . htmlspecialchars($active, ENT_QUOTES, 'UTF-8') . '.css"/>';
+  $perPageCssTag = '<link rel="stylesheet" href="assets/css/' . htmlspecialchars($active, ENT_QUOTES, 'UTF-8') . '.css?v=' . filemtime($abs) . '"/>';
 }
+$baseCssVersion = filemtime(__DIR__ . '/../assets/css/base.css');
+$lightboxCssVersion = filemtime(__DIR__ . '/../assets/css/lightbox.css');
 ?>
 <!doctype html>
 <html lang="id">
@@ -28,6 +37,7 @@ if (is_file($abs)) {
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title><?= h($docTitle) ?></title>
+  <base href="<?= h($homeUrl) ?>">
   <meta name="description" content="Service laptop, PC, dan elektronik cepat, rapi, transparan, dan bergaransi."/>
   <script>
     (function(){
@@ -45,13 +55,13 @@ if (is_file($abs)) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="assets/css/base.css"/>
-  <link rel="stylesheet" href="assets/css/lightbox.css"/>
+  <link rel="stylesheet" href="assets/css/base.css?v=<?= h((string)$baseCssVersion) ?>"/>
+  <link rel="stylesheet" href="assets/css/lightbox.css?v=<?= h((string)$lightboxCssVersion) ?>"/>
   <?= $perPageCssTag ?>
 </head>
 <body data-page="<?= h($active) ?>">
   <nav class="nav" id="nav">
-    <a class="brand" href="index.php?page=home" aria-label="<?= h($CONFIG['brand']) ?>">
+    <a class="brand" href="<?= h($homeUrl) ?>" aria-label="<?= h($CONFIG['brand']) ?>">
       <img
         src="assets/img/gambar/01_logo.png"
         alt="<?= h($CONFIG['brand']) ?>"
@@ -61,27 +71,27 @@ if (is_file($abs)) {
     </a>
 
     <div class="nav-menu" id="nav-menu">
-      <a href="index.php?page=home" class="link <?= $active==='home' ? 'active' : '' ?>">
+      <a href="<?= h($homeUrl) ?>" class="link <?= $active==='home' ? 'active' : '' ?>">
         <i class="fa-solid fa-house nav-icon" aria-hidden="true"></i>
         <span class="nav-label-full">Home</span>
         <span class="nav-label-short">Home</span>
       </a>
-      <a href="index.php?page=home#layanan" class="link">
+      <a href="<?= h($homeUrl) ?>#layanan" class="link">
         <i class="fa-solid fa-screwdriver-wrench nav-icon" aria-hidden="true"></i>
         <span class="nav-label-full">Layanan</span>
         <span class="nav-label-short">Layanan</span>
       </a>
-      <a href="index.php?page=katalog" class="link <?= $active==='katalog' ? 'active' : '' ?>">
+      <a href="<?= h($katalogUrl) ?>" class="link <?= $active==='katalog' ? 'active' : '' ?>">
         <i class="fa-solid fa-list-check nav-icon" aria-hidden="true"></i>
         <span class="nav-label-full">Katalog Servis</span>
         <span class="nav-label-short">Katalog</span>
       </a>
-      <a href="index.php?page=home#tentang" class="link">
+      <a href="<?= h($homeUrl) ?>#tentang" class="link">
         <i class="fa-solid fa-circle-info nav-icon" aria-hidden="true"></i>
         <span class="nav-label-full">Tentang Kami</span>
         <span class="nav-label-short">Tentang</span>
       </a>
-      <a href="index.php?page=kontak" class="link <?= $active==='kontak' ? 'active' : '' ?>">
+      <a href="<?= h($kontakUrl) ?>" class="link <?= $active==='kontak' ? 'active' : '' ?>">
         <i class="fa-solid fa-location-dot nav-icon" aria-hidden="true"></i>
         <span class="nav-label-full">Kontak</span>
         <span class="nav-label-short">Kontak</span>

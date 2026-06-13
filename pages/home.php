@@ -114,7 +114,7 @@ $processSteps = [
         <span>LAYANAN KAMI</span>
         <h2>Service <em>Profesional</em> dengan Hasil Terbaik</h2>
       </div>
-      <a href="index.php?page=katalog">Lihat Semua Layanan <i class="fa-solid fa-arrow-right"></i></a>
+      <a href="<?= h($basePath . '/katalog') ?>">Lihat Semua Layanan <i class="fa-solid fa-arrow-right"></i></a>
     </div>
 
     <div class="service-grid">

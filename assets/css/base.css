@@ -103,7 +103,9 @@ html.theme-dark .nav{
   text-decoration:none;
   white-space:nowrap;
 }
+.nav .link:visited{color:#090b12}
 html.theme-dark .nav .link{color:#f5f7fb}
+html.theme-dark .nav .link:visited{color:#f5f7fb}
 .nav .link::after{
   content:"";
   position:absolute;
@@ -117,7 +119,21 @@ html.theme-dark .nav .link{color:#f5f7fb}
   transition:transform .18s ease;
 }
 .nav .link:hover,.nav .link.active{color:var(--red)}
+.nav .link.active:visited{color:var(--red)}
 .nav .link.active::after,.nav .link:hover::after{transform:scaleX(1)}
+.nav-menu .link:not(.active),
+.nav-menu .link:not(.active):link,
+.nav-menu .link:not(.active):visited{
+  color:#090b12;
+}
+html.theme-dark .nav-menu .link:not(.active),
+html.theme-dark .nav-menu .link:not(.active):link,
+html.theme-dark .nav-menu .link:not(.active):visited{
+  color:#f5f7fb;
+}
+.nav-menu .link:not(.active):hover{
+  color:var(--red);
+}
 .nav-icon{display:none}
 .nav-label-short{display:none}
 .spacer{display:none}
@@ -342,6 +358,20 @@ html.theme-dark .footer-social span{
     white-space:normal;
   }
   html.theme-dark .nav .link{color:#c9d1df}
+  html.theme-dark .nav .link:visited{color:#c9d1df}
+  .nav-menu .link:not(.active),
+  .nav-menu .link:not(.active):link,
+  .nav-menu .link:not(.active):visited{
+    color:#3c4350;
+  }
+  html.theme-dark .nav-menu .link:not(.active),
+  html.theme-dark .nav-menu .link:not(.active):link,
+  html.theme-dark .nav-menu .link:not(.active):visited{
+    color:#c9d1df;
+  }
+  .nav-menu .link:not(.active):hover{
+    color:var(--red);
+  }
   .nav .link::after{display:none}
   .nav-label-full{display:none}
   .nav-label-short{display:block}

@@ -1,5 +1,15 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   Options -Indexes
+
+  RewriteCond %{THE_REQUEST} \s/+index\.php\?page=home[&\s] [NC]
+  RewriteRule ^index\.php$ ./? [R=301,L]
+
+  RewriteCond %{THE_REQUEST} \s/+index\.php\?page=([a-z]+)[&\s] [NC]
+  RewriteCond %1 !^home$ [NC]
+  RewriteRule ^index\.php$ %1? [R=301,L]
+
+  RewriteRule ^(home)/?$ index.php?page=home [L,QSA]
+  RewriteRule ^(katalog|kontak)/?$ index.php?page=$1 [L,QSA]
 </IfModule>
 AddDefaultCharset UTF-8

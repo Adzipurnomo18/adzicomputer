@@ -757,9 +757,9 @@ html.theme-dark .qr-code{background:#fff}
   .home-hero{padding-top:20px}
   .hero-copy{
     align-items:center;
-    justify-self:start;
-    width:calc(100vw - 32px);
-    max-width:728px;
+    justify-self:center;
+    width:100%;
+    max-width:min(728px, calc(100vw - 32px));
     padding:24px 0 24px;
     text-align:center;
   }
@@ -851,8 +851,7 @@ html.theme-dark .qr-code{background:#fff}
   .latest-section::after,
   .info-section::before{display:none}
   .hero-copy{
-    width:calc(100vw - 22px);
-    max-width:368px;
+    max-width:min(368px, calc(100vw - 22px));
   }
   .rating-badge{
     max-width:100%;

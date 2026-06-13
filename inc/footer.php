@@ -10,8 +10,8 @@
       </div>
     </div>
   </footer>
-  <script src="assets/js/core.js"></script>
-  <script src="assets/js/lightbox.js"></script>
+  <script src="assets/js/core.js?v=<?= h((string)filemtime(__DIR__ . '/../assets/js/core.js')) ?>"></script>
+  <script src="assets/js/lightbox.js?v=<?= h((string)filemtime(__DIR__ . '/../assets/js/lightbox.js')) ?>"></script>
   <?php if(!empty($pageJs)) echo $pageJs; ?>
 </body>
 </html>

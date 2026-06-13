@@ -58,13 +58,31 @@
 
 // Active state based on current page.
 (function(){
+  function normalizePath(pathname){
+    return pathname.replace(/\/+$/, '') || '/';
+  }
+
+  function pageFromUrl(url){
+    const pageParam = url.searchParams.get('page');
+    if(pageParam) return pageParam;
+
+    const currentDir = normalizePath(new URL('.', window.location.href).pathname);
+    let path = normalizePath(url.pathname);
+    if(currentDir !== '/' && path === currentDir) path = '/';
+    else if(currentDir !== '/' && path.startsWith(currentDir + '/')){
+      path = path.slice(currentDir.length) || '/';
+    }
+
+    const firstSegment = path.split('/').filter(Boolean)[0] || 'home';
+    return firstSegment === 'home' ? 'home' : firstSegment;
+  }
+
   function updateActiveLink(){
-    const params = new URLSearchParams(window.location.search);
-    const currentPage = params.get('page') || 'home';
+    const currentPage = pageFromUrl(new URL(window.location.href));
     document.querySelectorAll('.nav a.link').forEach((link)=>{
       const href = link.getAttribute('href') || '';
       const url = new URL(href, window.location.href);
-      const page = url.searchParams.get('page') || 'home';
+      const page = pageFromUrl(url);
       link.classList.toggle('active', page === currentPage && !url.hash);
     });
   }
