@@ -67,12 +67,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $descriptions = $_POST['item_description'] ?? [];
   $details = $_POST['item_detail'] ?? [];
   $qtys = $_POST['item_qty'] ?? [];
+  $partCapitalPrices = $_POST['item_part_capital_price'] ?? [];
   $partPrices = $_POST['item_part_price'] ?? [];
   $servicePrices = $_POST['item_service_price'] ?? [];
   foreach ($descriptions as $idx => $description) {
     $description = trim((string)$description);
     $detail = trim((string)($details[$idx] ?? ''));
     $qty = max(1, (int)($qtys[$idx] ?? 1));
+    $partCapitalPrice = max(0, (int)preg_replace('/\D+/', '', (string)($partCapitalPrices[$idx] ?? '0')));
     $partPrice = max(0, (int)preg_replace('/\D+/', '', (string)($partPrices[$idx] ?? '0')));
     $servicePrice = max(0, (int)preg_replace('/\D+/', '', (string)($servicePrices[$idx] ?? '0')));
     if ($description === '' && $detail === '' && $partPrice === 0 && $servicePrice === 0) continue;
@@ -84,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       'description' => $description,
       'detail' => $detail,
       'qty' => $qty,
+      'part_capital_price' => $partCapitalPrice,
       'part_price' => $partPrice,
       'service_price' => $servicePrice,
       'unit_price' => $partPrice + $servicePrice,
@@ -113,9 +116,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       $itemSt = $pdo->prepare("INSERT INTO service_invoice_items
-        (invoice_id, description, detail, qty, part_price, service_price, unit_price, position) VALUES (?,?,?,?,?,?,?,?)");
+        (invoice_id, description, detail, qty, part_capital_price, part_price, service_price, unit_price, position) VALUES (?,?,?,?,?,?,?,?,?)");
       foreach ($items as $item) {
-        $itemSt->execute([$invoiceId, $item['description'], $item['detail'], $item['qty'], $item['part_price'], $item['service_price'], $item['unit_price'], $item['position']]);
+        $itemSt->execute([$invoiceId, $item['description'], $item['detail'], $item['qty'], $item['part_capital_price'], $item['part_price'], $item['service_price'], $item['unit_price'], $item['position']]);
       }
       $pdo->commit();
       flash('ok', $id > 0 ? 'Nota berhasil diperbarui.' : 'Nota berhasil dibuat.');
@@ -169,7 +172,7 @@ if (!$editing) {
     'notes' => "Garansi service berlaku 30 hari sejak tanggal service.\nSimpan nota ini sebagai bukti pembayaran.\nTerima kasih telah mempercayakan perbaikan perangkat Anda kepada ADZI Computer.",
   ];
   $editingItems = [
-    ['description' => '', 'detail' => '', 'qty' => 1, 'part_price' => 0, 'service_price' => 0, 'unit_price' => 0],
+    ['description' => '', 'detail' => '', 'qty' => 1, 'part_capital_price' => 0, 'part_price' => 0, 'service_price' => 0, 'unit_price' => 0],
   ];
 }
 
@@ -244,7 +247,10 @@ admin_page_start('Nota Service', 'invoices', (int)$editing['id'] > 0 ? 'Edit not
                   $servicePrice = (int)$item['unit_price'];
                 }
               ?>
-              <label>Harga Part
+              <label>Harga Modal Part
+                <input name="item_part_capital_price[]" inputmode="numeric" pattern="[0-9.]*" value="<?= h(angka_ribuan($item['part_capital_price'] ?? 0)) ?>" placeholder="300.000" data-money-input>
+              </label>
+              <label>Harga Part (Up)
                 <input name="item_part_price[]" inputmode="numeric" pattern="[0-9.]*" value="<?= h(angka_ribuan($partPrice)) ?>" placeholder="400.000" data-money-input>
               </label>
               <label>Harga Jasa

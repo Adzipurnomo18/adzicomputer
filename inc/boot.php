@@ -92,6 +92,9 @@ if (!in_array('part_price', $invoiceItemColumns, true)) {
 if (!in_array('service_price', $invoiceItemColumns, true)) {
   $pdo->exec("ALTER TABLE service_invoice_items ADD COLUMN service_price INTEGER NOT NULL DEFAULT 0");
 }
+if (!in_array('part_capital_price', $invoiceItemColumns, true)) {
+  $pdo->exec("ALTER TABLE service_invoice_items ADD COLUMN part_capital_price INTEGER NOT NULL DEFAULT 0");
+}
 $pdo->exec("UPDATE service_invoice_items
   SET service_price = unit_price
   WHERE service_price = 0 AND part_price = 0 AND unit_price > 0");

@@ -43,6 +43,7 @@ $backUrl = 'reports_income.php?start=' . rawurlencode($startDate) . '&end=' . ra
 
     <section class="report-summary">
       <article><span>Total Pemasukan</span><strong><?= h(admin_rupiah($summary['total'])) ?></strong></article>
+      <article><span>Keuntungan Bersih</span><strong><?= h(admin_rupiah($summary['net_profit'])) ?></strong></article>
       <article><span>Jumlah Nota</span><strong><?= h((string)$summary['count']) ?></strong></article>
       <article><span>Rata-rata Nota</span><strong><?= h(admin_rupiah($summary['average'])) ?></strong></article>
     </section>
@@ -58,12 +59,13 @@ $backUrl = 'reports_income.php?start=' . rawurlencode($startDate) . '&end=' . ra
             <th>Perangkat</th>
             <th>Subtotal</th>
             <th>Diskon</th>
-            <th>Total</th>
+            <th>Total Pemasukan</th>
+            <th>Keuntungan</th>
           </tr>
         </thead>
         <tbody>
           <?php if(!$rows): ?>
-            <tr><td colspan="8" class="empty">Belum ada pemasukan pada periode ini.</td></tr>
+            <tr><td colspan="9" class="empty">Belum ada pemasukan pada periode ini.</td></tr>
           <?php else: foreach($rows as $idx => $row): ?>
             <tr>
               <td><?= h((string)($idx + 1)) ?></td>
@@ -74,6 +76,7 @@ $backUrl = 'reports_income.php?start=' . rawurlencode($startDate) . '&end=' . ra
               <td><?= h(admin_rupiah($row['subtotal'])) ?></td>
               <td><?= h(admin_rupiah($row['discount'])) ?></td>
               <td><strong><?= h(admin_rupiah($row['total_income'])) ?></strong></td>
+              <td><strong><?= h(admin_rupiah($row['net_profit'])) ?></strong></td>
             </tr>
           <?php endforeach; endif; ?>
         </tbody>

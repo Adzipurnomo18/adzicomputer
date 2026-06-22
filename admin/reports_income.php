@@ -39,6 +39,11 @@ admin_page_start('Laporan Pemasukan', 'reports_income', 'Laporan pemasukan dari 
           <small>Periode <?= h($startDate) ?> sampai <?= h($endDate) ?></small>
         </article>
         <article>
+          <span>Keuntungan Bersih</span>
+          <strong style="color:#087038"><?= h(admin_rupiah($summary['net_profit'])) ?></strong>
+          <small>Pemasukan - Modal Part</small>
+        </article>
+        <article>
           <span>Jumlah Nota</span>
           <strong><?= h((string)$summary['count']) ?></strong>
           <small>Nota service tersimpan</small>
@@ -69,7 +74,8 @@ admin_page_start('Laporan Pemasukan', 'reports_income', 'Laporan pemasukan dari 
               <span>Perangkat</span>
               <span>Subtotal</span>
               <span>Diskon</span>
-              <span>Total</span>
+              <span>Total Pemasukan</span>
+              <span>Keuntungan Bersih</span>
               <span>Aksi</span>
             </div>
             <?php foreach($rows as $row): ?>
@@ -80,7 +86,8 @@ admin_page_start('Laporan Pemasukan', 'reports_income', 'Laporan pemasukan dari 
                 <span data-label="Perangkat"><?= h(trim($row['device_type'] . ' ' . $row['device_model'])) ?></span>
                 <span data-label="Subtotal"><?= h(admin_rupiah($row['subtotal'])) ?></span>
                 <span data-label="Diskon"><?= h(admin_rupiah($row['discount'])) ?></span>
-                <span data-label="Total"><strong><?= h(admin_rupiah($row['total_income'])) ?></strong></span>
+                <span data-label="Total Pemasukan"><strong><?= h(admin_rupiah($row['total_income'])) ?></strong></span>
+                <span data-label="Keuntungan Bersih"><strong style="color:#087038"><?= h(admin_rupiah($row['net_profit'])) ?></strong></span>
                 <span data-label="Aksi">
                   <div class="invoice-actions">
                     <a class="icon-action" href="invoices_print.php?id=<?= h((string)$row['id']) ?>" target="_blank" title="Cetak nota" aria-label="Cetak nota <?= h($row['invoice_no']) ?>"><i class="fa-solid fa-print"></i></a>
